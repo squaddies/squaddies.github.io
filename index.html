@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>German Squad Server Stats</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+            background-color: #25292e;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            padding: 20px;
+        }
+
+        #serverInfoContainer {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .serverInfo {
+            background-color: #202428;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: left;
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .serverInfo:hover {
+            box-shadow: 0 4px 8px rgba(239, 199, 74, 0.2);
+        }
+
+        .heading {
+            color: #f6c636;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #f6c636;
+        }
+
+        h2 {
+            color: #f6c636;
+            font-size: 20px;
+        }
+
+        p {
+            margin: 10px 0;
+            color: #b8bdcc;
+        }
+
+        strong {
+            font-weight: bold;
+            color: #e7edff;
+        }
+
+        a {
+            color: #7db5fb;
+            text-decoration: none;
+        }
+
+        a:hover {
+            color: #a2cffc;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>German Squad Server Stats</h1>
+    <div id="serverInfoContainer"></div>
+
+    <script>
+        function formatTime(minutes) {
+            const hours = Math.floor(minutes / 60);
+            const remainingMinutes = Math.floor(minutes % 60);
+            return `${hours}h ${remainingMinutes}m`;
+        }
+
+
+        fetch('https://sqds.s3.eu-central-1.amazonaws.com/merged.json')
+            .then(response => response.json())
+            .then(jsonData => {
+                jsonData.sort((a, b) => b.player_count - a.player_count);
+
+                const serverInfoContainer = document.getElementById('serverInfoContainer');
+
+                jsonData.forEach(data => {
+                    const div = document.createElement('div');
+                    div.classList.add('serverInfo');
+
+                    const roundTimeFormatted = formatTime(data.round_time);
+
+                    div.innerHTML = `
+                <p><strong class=heading>${data.server_full_name}</strong></p>
+                <p><strong>Players:</strong> ${data.player_count} / ${data.max_players}</p>
+                <p><strong>Queue: </strong> ${data.queue_count}</p>
+                <p><strong>Current Layer:</strong> ${data.layer_name}</p>
+                <p><strong>Next Layer:</strong> ${data.layer_name_next}</p>
+                <p><strong>Game Mode:</strong> ${data.game_mode}</p>
+                <p><strong>Team:</strong> ${data.team_one} vs ${data.team_two}</p>
+                <p><strong>Round time:</strong> ${roundTimeFormatted}</p>
+            `;
+
+                    if (data.game_mode !== "AAS" && data.game_mode !== "Seed") {
+                        div.innerHTML += `<p><strong><a href="${data.squadlanes}" target="_blank">Squadlanes</strong></p>`;
+                    }
+
+                    div.innerHTML += `<p><strong><a href="${data.squadmaps}" target="_blank">Squadmaps</a></strong></p>`;
+                    serverInfoContainer.appendChild(div);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
+    </script>
+
+    <p class="footer">Die Daten werden jede Minute aktualisiert <br><br> DataIsBeautiful: <a
+            href="https://sqds.s3.eu-central-1.amazonaws.com/dashboard.html" target="_blank">Squad Dashboard</a> (wip)
+    </p>
+</body>
+
+</html>

@@ -1,0 +1,33 @@
+name: deploy
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency: deploy
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608
+
+      - name: setup aws credentials
+        if: ${{ github.event_name == 'push' }}
+        uses: aws-actions/configure-aws-credentials@8c3f20df09ac63af7b3ae3d7c91f105f857d8497
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-central-1
+
+      - name: update s3 files
+        if: ${{ github.event_name == 'push' }}
+        run: |
+          aws s3 cp index.html s3://stats.squaddies.de/index.html
+
+      - name: invalidate cloudfront
+        if: ${{ github.event_name == 'push' }}
+        run: |
+          aws cloudfront create-invalidation --distribution-id E1RPLQBFYO9OT6 --paths "/*"
