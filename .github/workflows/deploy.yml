@@ -26,6 +26,8 @@ jobs:
         if: ${{ github.event_name == 'push' }}
         run: |
           aws s3 cp index.html s3://stats.squaddies.de/index.html
+          aws s3 cp index.html s3://stats.squaddies.de/script.js
+          aws s3 cp index.html s3://stats.squaddies.de/style.css
 
       - name: invalidate cloudfront
         if: ${{ github.event_name == 'push' }}
