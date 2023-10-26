@@ -4,7 +4,7 @@ function formatTime(minutes) {
     return `${hours}h ${remainingMinutes}m`;
 }
 
-fetch("https://sqds.s3.eu-central-1.amazonaws.com/merged.json")
+fetch("https://s3.eu-central-1.amazonaws.com/stats.squaddies.de/merged.json")
     .then((response) => response.json())
     .then((jsonData) => {
         jsonData.sort((a, b) => b.player_count - a.player_count);
