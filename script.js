@@ -21,7 +21,7 @@ function formatTime(minutes) {
 showLoading();
 
 // Fetch data with loading animation
-fetch("https://cm6ndyhsbx2i26acyfyatkxuu40dothp.lambda-url.eu-central-1.on.aws/test.json")
+fetch("https://cm6ndyhsbx2i26acyfyatkxuu40dothp.lambda-url.eu-central-1.on.aws/merged.json")
     .then((response) => response.json())
     .then((jsonData) => {
         // Hide the loading animation when data is loaded
