@@ -1,12 +1,32 @@
+// Function to show the loading element
+function showLoading() {
+    const loadingElement = document.getElementById("loading");
+    loadingElement.style.display = "flex";
+}
+
+// Function to hide the loading element
+function hideLoading() {
+    const loadingElement = document.getElementById("loading");
+    loadingElement.style.display = "none";
+}
+
+// Function to format time
 function formatTime(minutes) {
     const hours = Math.floor(minutes / 60);
     const remainingMinutes = Math.floor(minutes % 60);
     return `${hours}h ${remainingMinutes}m`;
 }
 
-fetch("https://s3.eu-central-1.amazonaws.com/stats.squaddies.de/merged.json")
+// Show loading animation when the page loads
+showLoading();
+
+// Fetch data with loading animation
+fetch("https://cm6ndyhsbx2i26acyfyatkxuu40dothp.lambda-url.eu-central-1.on.aws/test.json")
     .then((response) => response.json())
     .then((jsonData) => {
+        // Hide the loading animation when data is loaded
+        hideLoading();
+
         jsonData.sort((a, b) => b.player_count - a.player_count);
 
         const serverInfoContainer = document.getElementById("serverInfoContainer");
@@ -18,7 +38,7 @@ fetch("https://s3.eu-central-1.amazonaws.com/stats.squaddies.de/merged.json")
             const roundTimeFormatted = formatTime(data.round_time);
 
             div.innerHTML = `
-                <p><strong class=heading>${data.server_full_name}</strong></p>
+                <p><strong class="heading">${data.server_full_name}</strong></p>
                 <p><strong>Players:</strong> ${data.player_count} / ${data.max_players}</p>
                 <p><strong>Queue: </strong> ${data.queue_count}</p>
                 <p><strong>Current Layer:</strong> ${data.layer_name}</p>
@@ -38,4 +58,6 @@ fetch("https://s3.eu-central-1.amazonaws.com/stats.squaddies.de/merged.json")
     })
     .catch((error) => {
         console.error("Error fetching data:", error);
+        // Hide the loading animation in case of an error
+        hideLoading();
     });
