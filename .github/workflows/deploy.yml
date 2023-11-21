@@ -28,6 +28,7 @@ jobs:
           aws s3 cp index.html s3://stats.squaddies.de/index.html
           aws s3 cp script.js s3://stats.squaddies.de/script.js
           aws s3 cp style.css s3://stats.squaddies.de/style.css
+          aws s3 cp squaddies.jpg s3://stats.squaddies.de/squaddies.jpg
           aws s3 cp squad-dashboard.png s3://stats.squaddies.de/squad-dashboard.png
 
       - name: invalidate cloudfront
