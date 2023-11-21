@@ -37,24 +37,39 @@ fetch("https://cm6ndyhsbx2i26acyfyatkxuu40dothp.lambda-url.eu-central-1.on.aws/m
 
             const roundTimeFormatted = formatTime(data.round_time);
 
-            div.innerHTML = `
+            // General information
+            const generalInfo = `
                 <p><strong class="heading">${data.server_full_name}</strong></p>
                 <p><strong>Players:</strong> ${data.player_count} / ${data.max_players}</p>
                 <p><strong>Queue: </strong> ${data.queue_count}</p>
-                <p><strong>Current Layer:</strong> ${data.layer_name}</p>
-                <p><strong>Next Layer:</strong> ${data.layer_name_next}</p>
-                <p><strong>Game Mode:</strong> ${data.game_mode}</p>
-                <p><strong>Team:</strong> ${data.team_one} vs ${data.team_two}</p>
                 <p><strong>Round time:</strong> ${roundTimeFormatted}</p>
             `;
 
-            if (data.game_mode !== "AAS" && data.game_mode !== "Seed") {
-                div.innerHTML += `<p><strong><a href="${data.squadlanes}" target="_blank">Squadlanes</strong></p>`;
-            }
+            // Current information
+            const currentInfo = `
+                <p><strong>Current Layer:</strong> ${data.layer_name}</p>
+                <p><strong>Game Mode:</strong> ${data.game_mode}</p>
+                <p><strong><a href="${data.squadmaps}" target="_blank">Squadmaps</a></strong></p>
+                ${data.game_mode !== "AAS" && data.game_mode !== "Seed" ? `<p><strong><a href="${data.squadlanes}" target="_blank">Squadlanes</a></strong></p>` : ''}
+            `;
 
-            div.innerHTML += `<p><strong><a href="${data.squadmaps}" target="_blank">Squadmaps</a></strong></p>`;
+            // Next information
+            const nextInfo = `
+                <p><strong>Next Layer:</strong> ${data.layer_name_next}</p>
+                <p><strong>Game Mode:</strong> ${data.game_mode}</p>
+                <p><strong><a href="${data.squadmaps}" target="_blank">Squadmaps</a></strong></p>
+                ${data.game_mode !== "AAS" && data.game_mode !== "Seed" ? `<p><strong><a href="${data.squadlanes}" target="_blank">Squadlanes</a></strong></p>` : ''}
+            `;
+
+            div.innerHTML = `
+                <div class="general-info">${generalInfo}</div>
+                <div class="current-info">${currentInfo}</div>
+                <div class="next-info">${nextInfo}</div>
+            `;
+
             serverInfoContainer.appendChild(div);
         });
+
     })
     .catch((error) => {
         console.error("Error fetching data:", error);
