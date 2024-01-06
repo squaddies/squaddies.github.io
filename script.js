@@ -11,9 +11,9 @@ function hideLoading() {
 }
 
 // Function to format time
-function formatTime(minutes) {
-    const hours = Math.floor(minutes / 60);
-    const remainingMinutes = Math.floor(minutes % 60);
+function formatTime(seconds) {
+    const hours = Math.floor(seconds / 3600);
+    const remainingMinutes = Math.floor((seconds % 3600) / 60);
     return `${hours}h ${remainingMinutes}m`;
 }
 
@@ -48,11 +48,29 @@ fetch("https://zljh3a5dwxmhvne7xoydlveihq0uptue.lambda-url.eu-central-1.on.aws/m
                 <p><strong>Round time:</strong> ${roundTimeFormatted}</p>
             `;
 
-            if (data.game_mode !== "AAS" && data.game_mode !== "Seed") {
-                div.innerHTML += `<p><strong><a href="${data.squadlanes}" target="_blank">Squadlanes</strong></p>`;
+            if (data.layer_name.includes("VAT_") || data.layer_name.includes("JensensRange") || data.layer_name.includes("HT_")) {
+                map_name = data.layer_name.split("_")[0];
+                layer = data.layer_name.split("_")[1];
+                mode = "Training";
+            } else {
+                map_name = data.layer_name.split("_")[0];
+                mode = data.layer_name.split("_")[1];
+                layer = data.layer_name.split("_")[2];
             }
 
-            div.innerHTML += `<p><strong><a href="${data.squadmaps}" target="_blank">Squadmaps</a></strong></p>`;
+            squadmaps = `http://squadmaps.com/#${map_name}`;
+
+            if (map_name === "Tallil") {
+                map_name = "Tallil+Outskirts";
+            }
+
+            squadlanes = `https://squadlanes.com/#map=${map_name}&layer=${mode}+${layer}`;
+
+            if (data.game_mode !== "AAS" && data.game_mode !== "Seed") {
+                div.innerHTML += `<p><strong><a href="${squadlanes}" target="_blank">Squadlanes</strong></p>`;
+            }
+
+            div.innerHTML += `<p><strong><a href="${squadmaps}" target="_blank">Squadmaps</a></strong></p>`;
             serverInfoContainer.appendChild(div);
         });
     })
