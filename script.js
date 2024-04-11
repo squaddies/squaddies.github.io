@@ -34,6 +34,18 @@ fetch("https://6zbvtyc4yf4p42nerdhovqsn7m0xdkmy.lambda-url.eu-central-1.on.aws/s
         jsonData.forEach((data) => {
             urlsArray.push(data.Url); // Push each URL into the array
             console.log(data.Url);
+
+            fetch(data.Url)
+                .then((response) => response.json())
+                .then((jsonData) => {
+                    console.log(jsonData);
+                })
+                .catch((error) => {
+                    console.error("Error fetching data:", error);
+                    // Hide the loading animation in case of an error
+                    hideLoading();
+                });
+
         });
     })
     .catch((error) => {
