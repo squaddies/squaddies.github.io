@@ -66,11 +66,11 @@ fetch("https://6zbvtyc4yf4p42nerdhovqsn7m0xdkmy.lambda-url.eu-central-1.on.aws/s
 
             squadlanes = `https://squadlanes.com/#map=${map_name}&layer=${mode}+${layer}`;
 
-            if (data.game_mode !== "AAS" && data.game_mode !== "Seed") {
-                div.innerHTML += `<p><strong><a href="${squadlanes}" target="_blank">Squadlanes</strong></p>`;
-            }
+            // if (data.game_mode !== "AAS" && data.game_mode !== "Seed") {
+            //     div.innerHTML += `<p><strong><a href="${squadlanes}" target="_blank">Squadlanes</strong></p>`;
+            // }
 
-            div.innerHTML += `<p><strong><a href="${squadmaps}" target="_blank">Squadmaps</a></strong></p>`;
+            // div.innerHTML += `<p><strong><a href="${squadmaps}" target="_blank">Squadmaps</a></strong></p>`;
             serverInfoContainer.appendChild(div);
         });
     })
