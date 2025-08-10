@@ -32,11 +32,7 @@ main {
 }
 
 .serverInfo {
-  background: linear-gradient(
-    135deg,
-    #262a30 80%,
-    #31353b 100%
-  ); 
+  background: linear-gradient(135deg, #262a30 80%, #31353b 100%);
   border-radius: 14px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.22);
   padding: 22px 20px 18px 20px;
@@ -127,4 +123,46 @@ a:hover {
   text-align: center;
   font-weight: bold;
   margin-top: 40px;
+}
+
+.hidden-server {
+  opacity: 0.5;
+  filter: grayscale(0.7);
+  background: linear-gradient(135deg, #23262b 80%, #2a2d32 100%);
+  pointer-events: auto;
+}
+
+.hide-btn {
+  background: #444a55;
+  color: #f6c636;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 16px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.hide-btn:hover {
+  background: #23262b;
+  color: #fffbe6;
+}
+
+.squadmaps-btn {
+  background: #444a55;
+  color: #f6c636;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 16px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.squadmaps-btn:hover {
+  background: #23262b;
+  color: #fffbe6;
+  text-decoration: underline;
 }
