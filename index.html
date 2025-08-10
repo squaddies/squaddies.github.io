@@ -1,26 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="description"
+      content="Live Squad server stats, player counts, and map info."
+    />
     <link rel="shortcut icon" href="./squaddies.jpg" type="image/jpeg" />
     <title>Squad Server Stats</title>
     <link rel="stylesheet" type="text/css" href="style.css" />
-</head>
+  </head>
 
-<body>
-    <h1>Squad Server Stats</h1>
-    <div id="loading" class="loading">
-        <div class="spinner"></div>
-    </div>
-    <div id="serverInfoContainer"></div>
+  <body>
+    <header>
+      <h1>Squad Server Stats</h1>
+    </header>
+    <main>
+      <section id="loading" class="loading" aria-live="polite" aria-busy="true">
+        <div class="spinner" title="Loading"></div>
+      </section>
+      <section id="serverInfoContainer" aria-live="polite"></section>
+    </main>
+    <footer class="footer">
+      <span>DataIsBeautiful: </span>
+      <a
+        href="https://stats.squaddies.de/squad-dashboard.png"
+        target="_blank"
+        rel="noopener noreferrer"
+        >Squad Dashboard</a
+      >
+      <span>(wip)</span>
+    </footer>
     <script src="script.js"></script>
-    <p class="footer">
-        DataIsBeautiful:
-        <a href="https://stats.squaddies.de/squad-dashboard.png" target="_blank">Squad Dashboard</a>
-        (wip)
-    </p>
-</body>
-
+  </body>
 </html>

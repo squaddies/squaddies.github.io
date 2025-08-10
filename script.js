@@ -1,81 +1,78 @@
-// Function to show the loading element
 function showLoading() {
-    const loadingElement = document.getElementById("loading");
-    loadingElement.style.display = "flex";
+  const loadingElement = document.getElementById("loading");
+  if (loadingElement) loadingElement.style.display = "flex";
 }
 
-// Function to hide the loading element
 function hideLoading() {
-    const loadingElement = document.getElementById("loading");
-    loadingElement.style.display = "none";
+  const loadingElement = document.getElementById("loading");
+  if (loadingElement) loadingElement.style.display = "none";
 }
 
-// Function to format time
 function formatTime(seconds) {
-    const hours = Math.floor(seconds / 3600);
-    const remainingMinutes = Math.floor((seconds % 3600) / 60);
-    return `${hours}h ${remainingMinutes}m`;
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  return `${hours}h ${minutes}m`;
 }
 
-// Show loading animation when the page loads
 showLoading();
 
-// Fetch data with loading animation
-fetch("https://6zbvtyc4yf4p42nerdhovqsn7m0xdkmy.lambda-url.eu-central-1.on.aws/squad/stats")
-    .then((response) => response.json())
-    .then((jsonData) => {
-        // Hide the loading animation when data is loaded
-        hideLoading();
-
-        jsonData.sort((a, b) => b.player_count - a.player_count);
-
-        const serverInfoContainer = document.getElementById("serverInfoContainer");
-
-        jsonData.forEach((data) => {
-            const div = document.createElement("div");
-            div.classList.add("serverInfo");
-
-            const roundTimeFormatted = formatTime(data.round_time);
-
-            div.innerHTML = `
-                <p><strong class="heading">${data.server_full_name}</strong></p>
-                <p><strong>Players:</strong> ${data.player_count} / ${data.max_players}</p>
-                <p><strong>Queue: </strong> ${data.queue_count}</p>
-                <p><strong>Current Layer:</strong> ${data.layer_name}</p>
-                <p><strong>Next Layer:</strong> ${data.layer_name_next}</p>
-                <p><strong>Game Mode:</strong> ${data.game_mode}</p>
-                <p><strong>Team:</strong> ${data.team_one} vs ${data.team_two}</p>
-                <p><strong>Round time:</strong> ${roundTimeFormatted}</p>
+fetch(
+  "https://6zbvtyc4yf4p42nerdhovqsn7m0xdkmy.lambda-url.eu-central-1.on.aws/squad/stats"
+)
+  .then((response) => response.json())
+  .then((serverList) => {
+    hideLoading();
+    serverList.sort((a, b) => b.player_count - a.player_count);
+    const container = document.getElementById("serverInfoContainer");
+    if (!container) return;
+    container.innerHTML = "";
+    serverList.forEach((server) => {
+      const div = document.createElement("div");
+      div.className = "serverInfo";
+      const roundTime = formatTime(server.round_time);
+      let mapName, mode, layer;
+      if (
+        server.layer_name.includes("VAT_") ||
+        server.layer_name.includes("JensensRange") ||
+        server.layer_name.includes("HT_")
+      ) {
+        [mapName, layer] = server.layer_name.split("_");
+        mode = "Training";
+      } else {
+        [mapName, mode, layer] = server.layer_name.split("_");
+      }
+      const mapNameCorrections = {
+        Tallil: "Tallil+Outskirts",
+        Sumari: "Sumari Bala",
+      };
+      if (mapNameCorrections[mapName]) mapName = mapNameCorrections[mapName];
+      const layerString =
+        mode && layer ? `${mode} ${layer}` : mode || layer || "";
+      const squadmapsUrl = `https://squadmaps.com/map?name=${encodeURIComponent(
+        mapName
+      )}&layer=${encodeURIComponent(layerString)}`;
+      div.innerHTML = `
+                <p><strong class="heading">${server.server_full_name}</strong></p>
+                <p><strong>Players:</strong> ${server.player_count} / ${server.max_players}</p>
+                <p><strong>Queue:</strong> ${server.queue_count}</p>
+                <p><strong>Current Layer:</strong> ${server.layer_name}</p>
+                <p><strong>Next Layer:</strong> ${server.layer_name_next}</p>
+                <p><strong>Game Mode:</strong> ${server.game_mode}</p>
+                <p><strong>Team:</strong> ${server.team_one} vs ${server.team_two}</p>
+                <p><strong>Round time:</strong> ${roundTime}</p>
+                <div class="links">
+                    <a href="${squadmapsUrl}" target="_blank" rel="noopener noreferrer">Squadmaps</a>
+                </div>
             `;
-
-            if (data.layer_name.includes("VAT_") || data.layer_name.includes("JensensRange") || data.layer_name.includes("HT_")) {
-                map_name = data.layer_name.split("_")[0];
-                layer = data.layer_name.split("_")[1];
-                mode = "Training";
-            } else {
-                map_name = data.layer_name.split("_")[0];
-                mode = data.layer_name.split("_")[1];
-                layer = data.layer_name.split("_")[2];
-            }
-
-            squadmaps = `http://squadmaps.com/#${map_name}`;
-
-            if (map_name === "Tallil") {
-                map_name = "Tallil+Outskirts";
-            }
-
-            squadlanes = `https://squadlanes.com/#map=${map_name}&layer=${mode}+${layer}`;
-
-            // if (data.game_mode !== "AAS" && data.game_mode !== "Seed") {
-            //     div.innerHTML += `<p><strong><a href="${squadlanes}" target="_blank">Squadlanes</strong></p>`;
-            // }
-
-            // div.innerHTML += `<p><strong><a href="${squadmaps}" target="_blank">Squadmaps</a></strong></p>`;
-            serverInfoContainer.appendChild(div);
-        });
-    })
-    .catch((error) => {
-        console.error("Error fetching data:", error);
-        // Hide the loading animation in case of an error
-        hideLoading();
+      container.appendChild(div);
     });
+  })
+  .catch((error) => {
+    console.error("Error fetching data:", error);
+    hideLoading();
+    const container = document.getElementById("serverInfoContainer");
+    if (container) {
+      container.innerHTML =
+        '<p class="error">Failed to load server data. Please try again later.</p>';
+    }
+  });
