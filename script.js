@@ -72,6 +72,8 @@ function updateServerTiles(serverList) {
     const mapNameCorrections = {
       Tallil: "Tallil+Outskirts",
       Sumari: "Sumari Bala",
+      Sanxian: "Sanxian Islands",
+      GooseBay: "Goose Bay",
     };
     if (mapNameCorrections[mapName]) mapName = mapNameCorrections[mapName];
     const layerString =
