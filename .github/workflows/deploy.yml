@@ -22,6 +22,12 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-central-1
 
+      - name: set version in index.html
+        run: |
+          VERSION=$(git rev-parse --short HEAD)
+          sed -i "s/\(script.js?v=\)hash/\1$VERSION/" index.html
+          sed -i "s/\(style.css?v=\)hash/\1$VERSION/" index.html
+
       - name: update s3 files
         if: ${{ github.event_name == 'push' }}
         run: |
