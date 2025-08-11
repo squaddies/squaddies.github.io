@@ -103,7 +103,9 @@ function updateServerTiles(serverList) {
                     }</button>
                 </div>
             `;
-    div.querySelector(".hide-btn").addEventListener("click", function () {
+    div.querySelector(".hide-btn").addEventListener("click", function (e) {
+      // Remove focus from all hide buttons to prevent mobile hover/active issue
+      document.querySelectorAll(".hide-btn").forEach((btn) => btn.blur());
       if (isHidden) {
         unhideServer(server);
       } else {
